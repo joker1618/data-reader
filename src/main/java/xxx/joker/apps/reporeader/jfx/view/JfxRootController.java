@@ -42,8 +42,9 @@ public class JfxRootController {
 //        rootPane.setLeft(new PaneLeft());
         rootPane.setLeft(paneLeft);
 
-        servT.doSome();
-        genServ.doSomeWork();
+//        servT.doSome();
+//        genServ.doSomeWork();
+        paneLeft.doWork("from root controller");
     }
 
 
