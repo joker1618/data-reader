@@ -13,11 +13,6 @@ import java.util.List;
 
 public interface GuiModel {
 
-    static GuiModel getModel() {
-        return GuiModelImpl.getModel();
-//        return new GuiModelImpl();
-    }
-
     ObservableList<Path> getCsvPaths();
     SimpleListProperty<Path> csvPathsProperty();
     void setCsvPaths(List<Path> csvPaths);

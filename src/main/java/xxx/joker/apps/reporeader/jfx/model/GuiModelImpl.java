@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
@@ -15,10 +15,9 @@ import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static xxx.joker.libs.core.lambda.JkStreams.*;
 import static xxx.joker.libs.core.lambda.JkStreams.filter;
 
-//@Service
+@Service
 public class GuiModelImpl implements GuiModel {
 
     private static final Logger LOG = LoggerFactory.getLogger(GuiModelImpl.class);
@@ -30,8 +29,8 @@ public class GuiModelImpl implements GuiModel {
     private final ObservableMap<Path, ObsCsv> cacheData = FXCollections.observableHashMap();
     private final ObservableSet<ObsObject> changedObjs = FXCollections.observableSet(new LinkedHashSet<>());
 
-    private static final GuiModelImpl instance = new GuiModelImpl();
-    private final FileDao dao = FileDao.getDao();
+    @Autowired
+    private FileDao dao;
 
     public GuiModelImpl() {
         initBindings();
@@ -50,10 +49,6 @@ public class GuiModelImpl implements GuiModel {
                 changedObjs.addAll(chmap.getValueRemoved().getDataList());
             }
         });
-    }
-
-    protected static GuiModelImpl getModel() {
-        return instance;
     }
 
     @Override
@@ -79,8 +74,12 @@ public class GuiModelImpl implements GuiModel {
     }
     @Override
     public void setSelCsv(Path path) {
-        this.cacheData.putIfAbsent(path, dao.load(path));
-        this.selCsv.set(cacheData.get(path));
+        if(path == null) {
+            selCsv.set(null);
+        } else {
+            this.cacheData.putIfAbsent(path, dao.readCsvFile(path));
+            this.selCsv.set(cacheData.get(path));
+        }
     }
 
     @Override
@@ -124,7 +123,7 @@ public class GuiModelImpl implements GuiModel {
         } else {
             cacheData.values().forEach(ObsCsv::commit);
             changedObjs.clear();
-            dao.persist(cacheData);
+            dao.persistCsvFiles(cacheData);
             return true;
         }
     }

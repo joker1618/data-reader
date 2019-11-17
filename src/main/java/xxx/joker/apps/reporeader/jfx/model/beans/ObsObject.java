@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class ObsObject extends BooleanBinding {
+
     private final SimpleListProperty<String> header;
     private final SimpleListProperty<ObsObjField> obsFields;
 

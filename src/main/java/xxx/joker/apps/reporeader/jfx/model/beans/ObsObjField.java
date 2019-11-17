@@ -4,9 +4,9 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ObsObjField extends BooleanBinding {
+
     private final SimpleStringProperty origValue;
     private final SimpleStringProperty currentValue;
-
 
     public ObsObjField(String value) {
         this.origValue = new SimpleStringProperty(value);

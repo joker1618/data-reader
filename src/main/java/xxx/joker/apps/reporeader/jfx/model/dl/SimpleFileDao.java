@@ -1,6 +1,7 @@
 package xxx.joker.apps.reporeader.jfx.model.dl;
 
 import javafx.collections.ObservableMap;
+import org.springframework.stereotype.Service;
 import xxx.joker.apps.reporeader.common.AppCtx;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
 import xxx.joker.libs.core.file.JkFiles;
@@ -13,37 +14,31 @@ import java.util.List;
 
 import static xxx.joker.libs.core.lambda.JkStreams.map;
 
+@Service
 public class SimpleFileDao implements FileDao {
 
-    private static final SimpleFileDao instance = new SimpleFileDao();
+    public SimpleFileDao() {
 
-    private SimpleFileDao() {
-
-    }
-
-    public static FileDao getInstance() {
-        return instance;
     }
 
     @Override
-    public ObsCsv load(Path path) {
+    public ObsCsv readCsvFile(Path path) {
         return new ObsCsv(JkCsv.readFile(path));
     }
 
     @Override
-    public List<ObsCsv> load(Collection<Path> paths) {
-        return map(paths, this::load);
+    public List<ObsCsv> readCsvFile(Collection<Path> paths) {
+        return map(paths, this::readCsvFile);
     }
 
     @Override
-    public void persist(ObservableMap<Path, ObsCsv> csvData) {
+    public void persistCsvFiles(ObservableMap<Path, ObsCsv> csvData) {
         // Backup original files
         csvData.keySet().forEach(p -> JkFiles.copy(p, AppCtx.getFileBackupPath(p)));
         // Create new files
         csvData.forEach((path,obsCsv) -> JkFiles.writeFile(path, obsCsv.toStrCsv()));
         // Remove backup folder
         JkStreams.map(csvData.keySet(), AppCtx::getFileBackupFolder).forEach(JkFiles::delete);
-
     }
 
 

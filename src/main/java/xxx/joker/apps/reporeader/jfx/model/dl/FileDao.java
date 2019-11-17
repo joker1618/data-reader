@@ -9,14 +9,10 @@ import java.util.List;
 
 public interface FileDao {
 
-    static FileDao getDao() {
-        return SimpleFileDao.getInstance();
-    }
+    ObsCsv readCsvFile(Path path);
+    List<ObsCsv> readCsvFile(Collection<Path> paths);
 
-    ObsCsv load(Path path);
-    List<ObsCsv> load(Collection<Path> paths);
-
-    void persist(ObservableMap<Path, ObsCsv> csvData);
+    void persistCsvFiles(ObservableMap<Path, ObsCsv> csvData);
 
 //    List<ObsCsv> load();
 
