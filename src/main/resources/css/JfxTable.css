@@ -1,0 +1,43 @@
+.jfxTable {
+    -bgColor: -lightBlue;
+    -bgColorHover: -darkBlue;
+    -fgColor: BLACK;
+    -fgColorHover: WHITE;
+    -headerHeight: 30;
+    -rowHeight: 25;
+}
+
+.table-row-cell {
+    -fx-pref-height: -rowHeight;
+}
+.column-header-background {
+    -fx-pref-height: -headerHeight;
+}
+.table-row-cell:even {
+    -fx-background-color: -bgColor;
+}
+
+.table-cell {
+    -fx-text-fill: -fgColor;
+    -fx-alignment: CENTER-LEFT;
+}
+.table-cell.centered {
+    -fx-text-alignment: CENTER;
+    -fx-alignment: CENTER;
+}
+
+.table-row-cell:filled:selected .table-cell,
+.jfxTable:row-selection .table-row-cell:filled:hover .table-cell,
+.jfxTable:row-selection .table-row-cell:filled:selected:hover .table-cell,
+.jfxTable:row-selection .table-row-cell:filled:selected:focused:hover .table-cell,
+.jfxTable:row-selection .table-row-cell:filled:selected:focused  .table-cell {
+    -fx-text-fill: -fgColorHover;
+}
+
+.table-row-cell:filled:selected,
+.jfxTable:row-selection .table-row-cell:filled:hover,
+.jfxTable:row-selection .table-row-cell:filled:selected:hover,
+.jfxTable:row-selection .table-row-cell:filled:selected:focused:hover,
+.jfxTable:row-selection .table-row-cell:filled:selected:focused  {
+    -fx-background-color: -bgColorHover;
+}

@@ -1,0 +1,64 @@
+* {
+    -darkBlue: #000033;
+    -lightBlue: #ccf2ff;
+    -main-bg-color: #ffe0b3;
+    -main-border-color: -darkBlue;
+}
+
+.simpleBorder {
+    -fx-border-color: BLACK;
+    -fx-border-width: 1;
+}
+
+/* LEFT */
+.rootLeft {
+    -fx-background-color: -main-bg-color;
+    -fx-padding: 15;
+    -fx-spacing: 15;
+    -fx-border-width: 0 3 0 0;
+    -fx-border-color: -main-border-color;
+}
+.rootLeft .buttons {
+    -fx-spacing: 20;
+    -fx-padding: 0 0 15 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -main-border-color;
+    -fx-alignment: CENTER;
+}
+.rootLeft .buttons .button {
+    -fx-pref-width: 85;
+    -fx-pref-height: 40;
+}
+
+/* CENTER */
+.rootCenter {
+    -fx-background-color: -main-bg-color;
+    -fx-padding: 15;
+}
+.rootCenter .caption {
+    -fx-padding: 0 0 15 0;
+    -fx-font-weight: BOLD;
+}
+
+/* RIGHT */
+.rootRight {
+    -fx-background-color: -main-bg-color;
+    -fx-padding: 15;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-color: -main-border-color;
+}
+.rootRight .jfxGridBox {
+    -fx-border-width: 1;
+    -fx-border-color: -main-border-color;
+}
+
+.rootRight .jfxGridBox .cellBox {
+    -fx-padding: 5;
+    -fx-alignment: CENTER-LEFT;
+}
+.rootRight .jfxGridBox .col0 {
+    -fx-padding: 5 15 5 5;
+}
+.rootRight .jfxGridBox .row-odd {
+     -fx-background-color: #eef2ff;
+}

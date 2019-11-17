@@ -1,0 +1,22 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+<!--                %-7level %logger{20}\(%line\) - %msg%n-->
+                %d{HH:mm:ss}  %-7level %logger{20}\(%line\) - %msg%n
+                <!--%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{20}\(%line\) - %msg%n-->
+            </pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="xxx.joker" level="trace" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="info">
+        <!--<root level="info">-->
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
