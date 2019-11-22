@@ -51,7 +51,7 @@ public class JfxRootController {
 
 
     public void initApp(Path folder) {
-        guiModel.setCsvPaths(JkFiles.findFiles(folder, false));
+        guiModel.csvPathsSet(JkFiles.findFiles(folder, false));
     }
 
     public boolean canCloseApp() {

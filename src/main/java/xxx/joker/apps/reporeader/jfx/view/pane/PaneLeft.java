@@ -1,7 +1,6 @@
 package xxx.joker.apps.reporeader.jfx.view.pane;
 
 import javafx.beans.binding.Bindings;
-import javafx.collections.ListChangeListener;
 import javafx.collections.SetChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.reporeader.jfx.model.GuiModel;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
-import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
+import xxx.joker.apps.reporeader.jfx.model.beans.ObsItem;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
@@ -28,7 +27,6 @@ public class PaneLeft extends VBox {
     @Autowired
     private GuiModel guiModel;
 
-//    private final GuiModel guiModel = GuiModel.getModel();
     private final ListView<Path> lvPaths = new ListView<>();
 
     @PostConstruct
@@ -36,8 +34,8 @@ public class PaneLeft extends VBox {
         // Config list view
         lvPaths.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         lvPaths.getSelectionModel().selectedItemProperty().addListener((obs,o,n) -> {
-            guiModel.setSelCsv(n);
-            guiModel.setSelTableItem(null);
+            guiModel.selectedPathSet(n);
+            guiModel.selectedTableItemSet(null);
         });
         lvPaths.setCellFactory(param -> new ListCell<Path>() {
             @Override
@@ -47,17 +45,12 @@ public class PaneLeft extends VBox {
                     setText(null);
                 } else {
                     setText(item.getFileName().toString());
-                    guiModel.getChangedObsObjects().addListener((SetChangeListener<ObsObject>) ch -> {
-                        Color color = guiModel.getCacheData().values().stream()
-                                .filter(o -> o.getCsvPath().equals(item))
-                                .filter(ObsCsv::isChanged)
-                                .count() > 0 ? Color.RED : Color.BLACK;
-                        setTextFill(color);
-                    });
+                    ObsCsv obsCsv = guiModel.getObsCsvMap().get(item);
+                    textFillProperty().bind(Bindings.createObjectBinding(() -> obsCsv.isChanged() ? Color.RED : Color.BLACK, obsCsv.changedProperty()));
                 }
             }
         });
-        guiModel.csvPathsProperty().addListener((ListChangeListener<Path>)lch -> lvPaths.getItems().setAll(guiModel.getCsvPaths()));
+        guiModel.csvPathsOnChange(plist -> lvPaths.getItems().setAll(plist));
 
         // Buttons
         Button btnCommit = new Button("COMMIT");
@@ -74,6 +67,7 @@ public class PaneLeft extends VBox {
         getChildren().add(boxButtons);
         getChildren().add(lvPaths);
 
+        // todo delete
         Button btnTmp = new Button("__TMP__");
         btnTmp.setOnAction(e -> doWork("from button tmp"));
         getChildren().add(createHBox("temp", btnTmp));
@@ -82,6 +76,7 @@ public class PaneLeft extends VBox {
     }
 
 
+    // todo delete
     public void doWork(String prefixString) {
 
     }

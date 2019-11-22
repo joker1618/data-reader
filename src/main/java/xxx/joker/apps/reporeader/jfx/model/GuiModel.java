@@ -1,32 +1,38 @@
 package xxx.joker.apps.reporeader.jfx.model;
 
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
-import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
+import xxx.joker.apps.reporeader.jfx.model.beans.ObsItem;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Collection;
+import java.util.function.Consumer;
 
 public interface GuiModel {
 
-    ObservableList<Path> getCsvPaths();
-    SimpleListProperty<Path> csvPathsProperty();
-    void setCsvPaths(List<Path> csvPaths);
+    void csvPathsSet(Collection<Path> paths);
+    void csvPathsOnChange(Consumer<Collection<Path>> onChange);
 
-    ObsCsv getSelCsv();
-    SimpleObjectProperty<ObsCsv> selCsvProperty();
-    void setSelCsv(Path path);
+//    ObservableList<Path> getCsvPaths();
+//    SimpleListProperty<Path> csvPathsProperty();
+//    void setCsvPaths(List<Path> csvPaths);
 
-    ObsObject getSelTableItem();
-    SimpleObjectProperty<ObsObject> selTableItemProperty();
-    void setSelTableItem(ObsObject selTableItem);
+//    ObsCsv getSelectedPath();
+//    SimpleObjectProperty<ObsCsv> selectedPathProperty();
+//    void setSelectedPath(Path path);
+    void selectedPathSet(Path path);
+    void selectedPathOnChange(Consumer<ObsCsv> onChange);
 
-    ObservableMap<Path, ObsCsv> getCacheData();
-    ObservableSet<ObsObject> getChangedObsObjects();
+//    ObsObject getSelectedTableItem();
+//    SimpleObjectProperty<ObsObject> selectedTableItemOnChange();
+    void selectedTableItemSet(ObsItem selectedTableItem);
+    void selectedTableItemOnChange(Consumer<ObsItem> onChange);
+
+
+
+    ObservableMap<Path, ObsCsv> getObsCsvMap();
+    ObservableSet<ObsItem> getChangedObsObjects();
 
     boolean rollback();
     boolean commit();

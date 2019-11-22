@@ -2,15 +2,19 @@ package xxx.joker.apps.reporeader.jfx.model.beans;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static xxx.joker.libs.core.util.JkStrings.strf;
 
-public class ObsObjField extends BooleanBinding {
+public class ObsField extends BooleanBinding {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ObsField.class);
 
     private final SimpleStringProperty origValue;
     private final SimpleStringProperty currentValue;
 
-    public ObsObjField(String value) {
+    public ObsField(String value) {
         this.origValue = new SimpleStringProperty(value);
         this.currentValue = new SimpleStringProperty(value);
         bind(origValue, currentValue);
@@ -50,6 +54,7 @@ public class ObsObjField extends BooleanBinding {
     // true == changed
     @Override
     protected boolean computeValue() {
+        LOG.debug("obsField changed = {},  {}", isChanged(), toString());
         return isChanged();
     }
     public boolean isChanged() {

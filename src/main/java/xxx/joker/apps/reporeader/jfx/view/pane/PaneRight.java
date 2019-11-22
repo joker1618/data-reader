@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.reporeader.jfx.model.GuiModel;
-import xxx.joker.apps.reporeader.jfx.model.beans.ObsObjField;
+import xxx.joker.apps.reporeader.jfx.model.beans.ObsField;
 import xxx.joker.apps.reporeader.jfx.view.controls.GridPaneBuilder;
 import xxx.joker.libs.core.lambda.JkStreams;
 import xxx.joker.libs.core.util.JkStrings;
@@ -44,7 +44,7 @@ public class PaneRight extends VBox {
         HBox captionFields = createHBox("caption", new Label("FIELDS"));
         HBox captionJSon = createHBox("caption", new Label("JSON"));
         TextArea textArea = new TextArea();
-        guiModel.selTableItemProperty().addListener((obs, o, n) -> {
+        guiModel.selectedTableItemOnChange(n -> {
             double wbefore = getWidth();
             getChildren().clear();
             getChildren().add(captionFields);
@@ -69,7 +69,7 @@ public class PaneRight extends VBox {
 
     }
 
-    private VBox createTextFieldVBox(ObsObjField obsField) {
+    private VBox createTextFieldVBox(ObsField obsField) {
         VBox vbox = new VBox();
 
         Label label = new Label(obsField.getOrigValue());
@@ -94,12 +94,6 @@ public class PaneRight extends VBox {
             }
         });
 
-        // in case of rollback
-        obsField.addListener((obs,o,n) -> {
-            if(!n && o) {
-                tf.setText(obsField.getCurrentValue());
-            }
-        });
         vbox.getChildren().add(tf);
 
         return vbox;

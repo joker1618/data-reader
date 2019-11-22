@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.reporeader.jfx.model.GuiModel;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
-import xxx.joker.apps.reporeader.jfx.model.beans.ObsObjField;
-import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
+import xxx.joker.apps.reporeader.jfx.model.beans.ObsField;
+import xxx.joker.apps.reporeader.jfx.model.beans.ObsItem;
 import xxx.joker.apps.reporeader.jfx.view.controls.JfxTable;
 import xxx.joker.apps.reporeader.jfx.view.controls.JfxTableCol;
 import xxx.joker.libs.core.cache.JkCache;
@@ -38,7 +38,7 @@ public class PaneCenter extends BorderPane {
 
     private final Label lblFileName = new Label();
     private Pane dataPane;
-    private final JkCache<Path, List<ObsObject>> cacheData = new JkCache<>();
+    private final JkCache<Path, List<ObsItem>> cacheData = new JkCache<>();
 
 
     @PostConstruct
@@ -55,34 +55,35 @@ public class PaneCenter extends BorderPane {
     }
 
     private void initBindings() {
-        guiModel.selCsvProperty().addListener((obs,o,n) -> {
-            lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "CSV FILE:  " + n.getCsvPath().getFileName().toString());
+//        guiModel.selectedCsvProperty().addListener((obs, o, n) -> {
+        guiModel.selectedPathOnChange(n -> {
+            lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "FILE:  " + n.getCsvPath().getFileName().toString());
             dataPane.getChildren().clear();
             if(n != null) {
-                JfxTable<ObsObject> table = createTable(n);
+                JfxTable<ObsItem> table = createTable(n);
                 dataPane.getChildren().setAll(table);
                 table.prefWidthProperty().bind(dataPane.widthProperty());
             }
         });
     }
 
-    private JfxTable<ObsObject> createTable(ObsCsv csv) {
-        JfxTable<ObsObject> table = new JfxTable<>();
+    private JfxTable<ObsItem> createTable(ObsCsv csv) {
+        JfxTable<ObsItem> table = new JfxTable<>();
 
         for (int i = 0; i < csv.getHeader().size(); i++) {
             String hcol = csv.getHeader().get(i);
             int idx = i;
-            JfxTableCol<ObsObject, ObsObjField> col = JfxTableCol.createCol(hcol, o -> o.getObsFields().get(idx), ObsObjField::getCurrentValue);
+            JfxTableCol<ObsItem, ObsField> col = JfxTableCol.createCol(hcol, o -> o.getObsFields().get(idx), ObsField::getCurrentValue);
             table.addColumn(col);
         }
 
-        JfxTableCol<ObsObject, Boolean> col = JfxTableCol.createCol("*", ObsObject::getValue, b -> b ? "*" : "", "centered");
+        JfxTableCol<ObsItem, Boolean> col = JfxTableCol.createCol("*", ObsItem::getValue, b -> b ? "*" : "", "centered");
         table.addColumn(0, col);
 
-        JfxTableCol<ObsObject, Boolean> colDel = JfxTableCol.createCol("", ObsObject::getValue, "centered");
+        JfxTableCol<ObsItem, Boolean> colDel = JfxTableCol.createCol("", ObsItem::getValue, "centered");
         table.addColumn(0, colDel);
         Image delImg = new Image(getClass().getResource("/icon/deleteRed.png").toExternalForm());
-        colDel.setCellFactory(param -> new TableCell<ObsObject, Boolean>() {
+        colDel.setCellFactory(param -> new TableCell<ObsItem, Boolean>() {
             final Button btn = new Button();
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -99,12 +100,12 @@ public class PaneCenter extends BorderPane {
             }
         });
 
-        ObservableList<ObsObject> items = FXCollections.observableArrayList(csv.getDataList());
+        ObservableList<ObsItem> items = FXCollections.observableArrayList(csv.getDataList());
         items.forEach(oo -> oo.addListener((obs,o,n) -> table.refresh()));
         table.setItems(items);
 
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        table.getSelectionModel().selectedItemProperty().addListener((obs,o,n) -> guiModel.setSelTableItem(n));
+        table.getSelectionModel().selectedItemProperty().addListener((obs,o,n) -> guiModel.selectedTableItemSet(n));
 
         return table;
     }
