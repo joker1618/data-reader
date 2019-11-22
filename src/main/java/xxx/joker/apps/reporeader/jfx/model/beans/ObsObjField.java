@@ -3,6 +3,8 @@ package xxx.joker.apps.reporeader.jfx.model.beans;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 
+import static xxx.joker.libs.core.util.JkStrings.strf;
+
 public class ObsObjField extends BooleanBinding {
 
     private final SimpleStringProperty origValue;
@@ -12,6 +14,13 @@ public class ObsObjField extends BooleanBinding {
         this.origValue = new SimpleStringProperty(value);
         this.currentValue = new SimpleStringProperty(value);
         bind(origValue, currentValue);
+    }
+
+    @Override
+    public String toString() {
+        String s = strf("'{}'", getCurrentValue());
+        if(isChanged()) s += strf(" ({})", getOrigValue());
+        return s;
     }
 
     public String getOrigValue() {

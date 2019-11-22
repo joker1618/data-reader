@@ -1,8 +1,7 @@
 package xxx.joker.apps.reporeader.jfx.model.dl;
 
 import javafx.collections.ObservableMap;
-import org.springframework.stereotype.Service;
-import xxx.joker.apps.reporeader.common.AppCtx;
+import xxx.joker.apps.reporeader.config.AppCtx;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
 import xxx.joker.libs.core.file.JkFiles;
 import xxx.joker.libs.core.format.JkCsv;
@@ -14,8 +13,8 @@ import java.util.List;
 
 import static xxx.joker.libs.core.lambda.JkStreams.map;
 
-@Service
-public class SimpleFileDao implements FileDao {
+//@Service
+class SimpleFileDao implements FileDao {
 
     public SimpleFileDao() {
 

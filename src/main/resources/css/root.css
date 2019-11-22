@@ -35,7 +35,8 @@
     -fx-background-color: -main-bg-color;
     -fx-padding: 15;
 }
-.rootCenter .caption {
+.rootCenter .caption,
+.rootRight .caption{
     -fx-padding: 0 0 15 0;
     -fx-font-weight: BOLD;
 }

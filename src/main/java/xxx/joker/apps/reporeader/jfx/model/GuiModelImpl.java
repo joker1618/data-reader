@@ -5,8 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
 import xxx.joker.apps.reporeader.jfx.model.dl.FileDao;
@@ -14,11 +13,12 @@ import xxx.joker.apps.reporeader.jfx.model.dl.FileDao;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static xxx.joker.libs.core.lambda.JkStreams.filter;
 
-@Service
-public class GuiModelImpl implements GuiModel {
+@Repository
+class GuiModelImpl implements GuiModel {
 
     private static final Logger LOG = LoggerFactory.getLogger(GuiModelImpl.class);
 
@@ -29,21 +29,30 @@ public class GuiModelImpl implements GuiModel {
     private final ObservableMap<Path, ObsCsv> cacheData = FXCollections.observableHashMap();
     private final ObservableSet<ObsObject> changedObjs = FXCollections.observableSet(new LinkedHashSet<>());
 
-    @Autowired
-    private FileDao dao;
+    private final FileDao dao;
 
     public GuiModelImpl() {
+        LOG.debug("Creating bean 'guiModel'");
+        this.dao = FileDao.createDao();
         initBindings();
     }
 
     private void initBindings() {
         cacheData.addListener((MapChangeListener<Path, ObsCsv>) chmap -> {
             if(chmap.wasAdded()) {
-                List<ObsObject> ooList = chmap.getValueAdded().getDataList();
-                ooList.forEach(oo -> oo.addListener((obs, o, n) -> {
+                SimpleListProperty<ObsObject> ooList = chmap.getValueAdded().getDataList();
+                Consumer<ObsObject> ooCons = oo -> oo.addListener((obs, o, n) -> {
                     if(n)   changedObjs.add(oo);
                     else    changedObjs.remove(oo);
-                }));
+                });
+                ooList.addListener((ListChangeListener<ObsObject>)ch -> {
+                    if(ch.wasAdded()) {
+                        ch.getAddedSubList().forEach(ooCons::accept);
+                    } else if(ch.wasRemoved()) {
+                        ch.getRemoved().forEach(changedObjs::add);
+                    }
+                });
+                ooList.forEach(ooCons::accept);
                 changedObjs.addAll(filter(ooList, ObsObject::isChanged));
             } else if(chmap.wasRemoved()) {
                 changedObjs.addAll(chmap.getValueRemoved().getDataList());

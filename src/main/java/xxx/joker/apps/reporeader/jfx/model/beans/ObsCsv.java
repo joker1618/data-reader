@@ -1,19 +1,13 @@
 package xxx.joker.apps.reporeader.jfx.model.beans;
 
-import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import xxx.joker.libs.core.format.JkCsv;
 import xxx.joker.libs.core.lambda.JkStreams;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import static xxx.joker.libs.core.lambda.JkStreams.map;
 

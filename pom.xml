@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xxx.joker.libs</groupId>
-    <artifactId>repo-reader</artifactId>
+    <artifactId>data-reader</artifactId>
     <version>3.0</version>
 
     <parent>

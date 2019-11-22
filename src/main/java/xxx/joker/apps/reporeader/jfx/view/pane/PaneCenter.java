@@ -2,10 +2,15 @@ package xxx.joker.apps.reporeader.jfx.view.pane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.reporeader.jfx.model.GuiModel;
@@ -15,6 +20,7 @@ import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
 import xxx.joker.apps.reporeader.jfx.view.controls.JfxTable;
 import xxx.joker.apps.reporeader.jfx.view.controls.JfxTableCol;
 import xxx.joker.libs.core.cache.JkCache;
+import xxx.joker.libs.core.javafx.JfxControls;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
@@ -24,6 +30,8 @@ import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 
 @Component
 public class PaneCenter extends BorderPane {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PaneCenter.class);
 
     @Autowired
     private GuiModel guiModel;
@@ -35,7 +43,6 @@ public class PaneCenter extends BorderPane {
 
     @PostConstruct
     public void init() {
-    // public PaneCenter() {
         Pane headerPane = createHBox("caption", lblFileName);
         setTop(headerPane);
 
@@ -49,7 +56,7 @@ public class PaneCenter extends BorderPane {
 
     private void initBindings() {
         guiModel.selCsvProperty().addListener((obs,o,n) -> {
-            lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "File:  " + n.getCsvPath().getFileName().toString());
+            lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "CSV FILE:  " + n.getCsvPath().getFileName().toString());
             dataPane.getChildren().clear();
             if(n != null) {
                 JfxTable<ObsObject> table = createTable(n);
@@ -71,6 +78,26 @@ public class PaneCenter extends BorderPane {
 
         JfxTableCol<ObsObject, Boolean> col = JfxTableCol.createCol("*", ObsObject::getValue, b -> b ? "*" : "", "centered");
         table.addColumn(0, col);
+
+        JfxTableCol<ObsObject, Boolean> colDel = JfxTableCol.createCol("", ObsObject::getValue, "centered");
+        table.addColumn(0, colDel);
+        Image delImg = new Image(getClass().getResource("/icon/deleteRed.png").toExternalForm());
+        colDel.setCellFactory(param -> new TableCell<ObsObject, Boolean>() {
+            final Button btn = new Button();
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    btn.setGraphic(JfxControls.createImageView(delImg, 25, 25));
+                    setGraphic(btn);
+                    btn.setOnAction(e -> LOG.debug("deleted item {}", getTableView().getItems().get(getTableRow().getIndex())));
+                    setText(null);
+                }
+            }
+        });
 
         ObservableList<ObsObject> items = FXCollections.observableArrayList(csv.getDataList());
         items.forEach(oo -> oo.addListener((obs,o,n) -> table.refresh()));

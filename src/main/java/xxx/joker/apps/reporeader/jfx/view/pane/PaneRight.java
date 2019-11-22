@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.util.JkStrings.safeTrim;
 import static xxx.joker.libs.core.util.JkStrings.strf;
 
@@ -28,17 +30,24 @@ public class PaneRight extends VBox {
     @Autowired
     private GuiModel guiModel;
 
+    public PaneRight() {
+        getStyleClass().addAll("rootRight");
+    }
+
     @PostConstruct
-    public void init() {
-    // public PaneRight() {
+    public void initGui() {
         GridPaneBuilder gpBuilder = new GridPaneBuilder();
 
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
+        HBox captionFields = createHBox("caption", new Label("FIELDS"));
+        HBox captionJSon = createHBox("caption", new Label("JSON"));
+        TextArea textArea = new TextArea();
         guiModel.selTableItemProperty().addListener((obs, o, n) -> {
             double wbefore = getWidth();
             getChildren().clear();
+            getChildren().add(captionFields);
             if(n != null) {
                 List<String> jsonLines = new ArrayList<>();
                 for(int i = 0; i < n.getHeader().size(); i++) {
@@ -49,7 +58,8 @@ public class PaneRight extends VBox {
                 getChildren().add(gpBuilder.createGridPane());
 
                 String jsonString = JkStreams.join(jsonLines, ",\n", s -> JkStrings.leftPadLines(s, " ", 4));
-                TextArea textArea = new TextArea(strf("{\n{}\n}", jsonString));
+                textArea.setText(strf("{\n{}\n}", jsonString));
+//                getChildren().add(captionJSon);
 //                getChildren().add(textArea);
 
             } else {
@@ -57,7 +67,6 @@ public class PaneRight extends VBox {
             }
         });
 
-        getStyleClass().addAll("rootRight");
     }
 
     private VBox createTextFieldVBox(ObsObjField obsField) {
@@ -84,6 +93,7 @@ public class PaneRight extends VBox {
                 obsField.setCurrentValue(trim);
             }
         });
+
         // in case of rollback
         obsField.addListener((obs,o,n) -> {
             if(!n && o) {

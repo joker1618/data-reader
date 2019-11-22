@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static xxx.joker.libs.core.util.JkStrings.strf;
+
 public class ObsObject extends BooleanBinding {
 
     private final SimpleListProperty<String> header;
@@ -39,6 +41,16 @@ public class ObsObject extends BooleanBinding {
         return JkStreams.map(obsFields, ObsObjField::getCurrentValue);
     }
 
+    @Override
+    public String toString() {
+        List<String> elems = new ArrayList<>();
+        for(int i = 0; i < header.size(); i++) {
+            ObsObjField oof = getObsFields().get(i);
+            String s = strf("{}: {}", getHeader().get(i), oof.toString());
+            elems.add(s);
+        }
+        return strf("[{}]", JkStreams.join(elems, ", "));
+    }
     // true == changed
     @Override
     protected boolean computeValue() {

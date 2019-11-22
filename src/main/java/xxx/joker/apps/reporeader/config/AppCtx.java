@@ -1,4 +1,4 @@
-package xxx.joker.apps.reporeader.common;
+package xxx.joker.apps.reporeader.config;
 
 import xxx.joker.libs.core.file.JkFiles;
 

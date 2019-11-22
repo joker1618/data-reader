@@ -14,8 +14,8 @@ public interface FileDao {
 
     void persistCsvFiles(ObservableMap<Path, ObsCsv> csvData);
 
-//    List<ObsCsv> load();
-
-
+    static FileDao createDao() {
+        return new SimpleFileDao();
+    }
 
 }

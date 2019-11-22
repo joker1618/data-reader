@@ -1,6 +1,5 @@
 package xxx.joker.apps.reporeader.jfx.view.pane;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.SetChangeListener;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Component;
 import xxx.joker.apps.reporeader.jfx.model.GuiModel;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.reporeader.jfx.model.beans.ObsObject;
-import xxx.joker.libs.core.file.JkFiles;
-import xxx.joker.libs.core.lambda.JkStreams;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
