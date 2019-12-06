@@ -11,12 +11,11 @@
     </appender>
 
 
-    <logger name="xxx.joker" level="trace" additivity="false">
+    <logger name="xxx.joker" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
     <root level="info">
-        <!--<root level="info">-->
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

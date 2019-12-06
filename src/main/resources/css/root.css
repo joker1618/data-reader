@@ -40,7 +40,14 @@
     -fx-padding: 0 0 15 0;
     -fx-font-weight: BOLD;
 }
-
+.rootCenter .jfxTable .btnDelete {
+    -fx-padding: 0;
+}
+/*
+.rootRight .caption {
+    -fx-alignment: CENTER;
+}
+*/
 /* RIGHT */
 .rootRight {
     -fx-background-color: -main-bg-color;
