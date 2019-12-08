@@ -61,6 +61,6 @@ public class JfxRootController {
         if(guiModel.getChangedItemMap().isEmpty())
             return true;
 
-        return JfxUtil.alertConfirmation("{} uncommitted changes will be lost. Close anyway?", guiModel.getChangedItemMap().size());
+        return JfxUtil.alertConfirm("{} uncommitted changes will be lost. Close anyway?", guiModel.getChangedItemMap().size());
     }
 }
