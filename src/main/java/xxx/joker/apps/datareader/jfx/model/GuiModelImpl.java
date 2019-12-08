@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
