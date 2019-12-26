@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
+import xxx.joker.libs.core.util.JkStrings;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
             ObsField of = fmap.get(e.getKey());
             String expected = e.getValue().get();
             return StringUtils.isNotBlank(expected)
-                    && !StringUtils.containsIgnoreCase(of.getCurrentValue().trim(), expected);
+                    && !StringUtils.containsIgnoreCase(JkStrings.safeTrim(of.getCurrentValue()), expected);
         });
         return numWrong == 0;
     }
