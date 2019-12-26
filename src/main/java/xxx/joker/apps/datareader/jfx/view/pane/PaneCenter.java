@@ -2,12 +2,12 @@ package xxx.joker.apps.datareader.jfx.view.pane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import xxx.joker.apps.datareader.jfx.model.GuiModel;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
+import xxx.joker.apps.datareader.jfx.view.beans.FilterObj;
 import xxx.joker.apps.datareader.jfx.view.controls.JfxTable;
 import xxx.joker.apps.datareader.jfx.view.controls.JfxTableCol;
 import xxx.joker.libs.core.cache.JkCache;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
+import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
 
 @Component
 public class PaneCenter extends BorderPane {
@@ -35,6 +37,8 @@ public class PaneCenter extends BorderPane {
 
     @Autowired
     private GuiModel guiModel;
+    @Autowired
+    private FilterObj filterObj;
 
     private final Label lblFileName = new Label();
     private Pane dataPane;
@@ -106,7 +110,13 @@ public class PaneCenter extends BorderPane {
 
         ObservableList<ObsItem> items = csv.getDataList();
         items.forEach(oo -> oo.addListener((obs,o,n) -> table.refresh()));
-        table.setItems(items);
+
+        FilteredList<ObsItem> filteredList = new FilteredList<>(items);
+        filteredList.predicateProperty().bind(filterObj);
+
+        SortedList<ObsItem> tableItems = new SortedList<>(filteredList);
+        tableItems.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(tableItems);
 
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         table.getSelectionModel().selectedItemProperty().addListener((obs,o,n) -> guiModel.selectedTableItemSet(n));

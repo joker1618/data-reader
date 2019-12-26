@@ -17,16 +17,16 @@ public class GridPaneBuilder {
     // row, cols
     private Map<Integer, Map<Integer, GpBox>> boxMap = new HashMap<>();
 
-    public GridPaneBuilder add(int row, int col, String lbl, Object... params) {
-        return add(row, col, 1, 1, lbl, params);
+    public GridPaneBuilder addLabel(int row, int col, String lbl, Object... params) {
+        return addLabel(row, col, 1, 1, lbl, params);
     }
-    public GridPaneBuilder add(int row, int col, int rowSpan, int colSpan, String lbl, Object... params) {
-        return add(row, col, rowSpan, colSpan, new Label(strf(lbl, params)));
+    public GridPaneBuilder addLabel(int row, int col, int rowSpan, int colSpan, String lbl, Object... params) {
+        return addNode(row, col, rowSpan, colSpan, new Label(strf(lbl, params)));
     }
-    public GridPaneBuilder add(int row, int col, Node node) {
-        return add(row, col, 1, 1, node);
+    public GridPaneBuilder addNode(int row, int col, Node node) {
+        return addNode(row, col, 1, 1, node);
     }
-    public GridPaneBuilder add(int row, int col, int rowSpan, int colSpan, Node node) {
+    public GridPaneBuilder addNode(int row, int col, int rowSpan, int colSpan, Node node) {
         HBox hBox = new HBox(node);
         GpBox gpBox = new GpBox(hBox, rowSpan, colSpan);
         boxMap.putIfAbsent(row, new HashMap<>());

@@ -6,10 +6,9 @@ import javafx.collections.FXCollections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xxx.joker.libs.core.lambda.JkStreams;
+import xxx.joker.libs.core.test.JkTests;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static xxx.joker.libs.core.util.JkStrings.strf;
 
@@ -19,15 +18,26 @@ public class ObsItem extends BooleanBinding {
 
     private final SimpleListProperty<String> header;
     private final SimpleListProperty<ObsField> obsFields;
+    private final Map<String, ObsField> fieldMap;
 
-    public ObsItem(List<String> header, Collection<ObsField> obsFields) {
+    public ObsItem(List<String> header, Collection<ObsField> fields) {
         this.header = new SimpleListProperty<>(FXCollections.observableArrayList(header));
-        this.obsFields = new SimpleListProperty<>(FXCollections.observableArrayList(obsFields));
+        this.obsFields = new SimpleListProperty<>(FXCollections.observableArrayList(fields));
+        this.fieldMap = new LinkedHashMap<>();
+        for(int i = 0; i < header.size(); i++) {
+            fieldMap.put(header.get(i), obsFields.get(i));
+        }
         this.obsFields.forEach(this::bind);
     }
 
+    public Map<String, ObsField> getObsFieldMap() {
+        return fieldMap;
+    }
     public List<ObsField> getObsFields() {
         return obsFields;
+    }
+    public ObsField getObsField(String fieldName) {
+        return fieldMap.get(fieldName);
     }
 
     public void rollback() {

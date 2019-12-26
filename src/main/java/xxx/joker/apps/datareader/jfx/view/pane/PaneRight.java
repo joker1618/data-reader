@@ -51,8 +51,8 @@ public class PaneRight extends VBox {
             if(n != null) {
                 List<String> jsonLines = new ArrayList<>();
                 for(int i = 0; i < n.getHeader().size(); i++) {
-                    gpBuilder.add(i, 0, n.getHeader().get(i));
-                    gpBuilder.add(i, 1, createTextFieldVBox(n.getObsFields().get(i)));
+                    gpBuilder.addLabel(i, 0, n.getHeader().get(i));
+                    gpBuilder.addNode(i, 1, createTextFieldVBox(n.getObsFields().get(i)));
                     jsonLines.add(strf("\"{}\": \"{}\"", n.getHeader().get(i), n.getObsFields().get(i).getCurrentValue()));
                 }
                 getChildren().add(gpBuilder.createGridPane());

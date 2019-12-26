@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static xxx.joker.libs.core.lambda.JkStreams.count;
@@ -36,7 +37,8 @@ public class ObsCsv {
         List<ObsItem> list = map(csv.getCurrentData(true), row -> new ObsItem(csv.getHeader(), map(row, ObsField::new)));
         this.dataList.setAll(list);
         dataList.forEach(oi -> oi.addListener((obs,o,n) -> changedProperty.set(isChanged())));
-        dataList.addListener((ListChangeListener<ObsItem>) ch -> dataChanged.set(true));
+        int origDataListSize = dataList.size();
+        dataList.addListener((ListChangeListener<ObsItem>) ch -> dataChanged.set(dataList.size() != origDataListSize));
         dataChanged.addListener((obs,o,n) -> changedProperty.set(isChanged()));
 
 //        changedProperty.addListener((obs,o,n) -> LOG.trace("obsCsv changed={}, {}", n, this));
@@ -74,6 +76,10 @@ public class ObsCsv {
 
     public ObservableBooleanValue changedProperty() {
         return changedProperty;
+    }
+
+    public void checkIfChanged() {
+        changedProperty.set(isChanged());
     }
 
 //    public void onChange(Consumer<ObsCsv> consumer) {

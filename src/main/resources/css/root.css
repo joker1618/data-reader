@@ -29,6 +29,23 @@
     -fx-pref-width: 85;
     -fx-pref-height: 40;
 }
+.rootLeft .filters {
+    -fx-padding: 15 0 0 0;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: -main-border-color;
+    -fx-alignment: CENTER-LEFT;
+}
+.rootLeft .filters .cellBox {
+    -fx-alignment: CENTER-LEFT;
+}
+.rootLeft .filters .jfxGridBox {
+    -fx-hgap: 10;
+    -fx-vgap: 5;
+}
+.rootLeft .filters .boxClear {
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: CENTER;
+}
 
 /* CENTER */
 .rootCenter {

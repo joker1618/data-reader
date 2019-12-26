@@ -47,15 +47,25 @@ class GuiModelImpl implements GuiModel {
                 });
                 oiList.addListener((ListChangeListener<ObsItem>) ch -> {
                     if(ch.next()) {
-                        ch.getAddedSubList().forEach(oiCons::accept);
-                        ch.getRemoved().forEach(oi -> changedItemMap.put(oi, chmap.getValueRemoved()));
+                        if(ch.getAddedSize() != ch.getRemovedSize() && (ch.getAddedSize() == 0 || ch.getRemovedSize() == 0)) {
+                            ch.getAddedSubList().forEach(oiCons::accept);
+                            ch.getRemoved().forEach(oi -> changedItemMap.put(oi, chmap.getValueRemoved()));
+                        }
                     }
                 });
                 oiList.forEach(oiCons::accept);
                 filter(oiList, ObsItem::isChanged).forEach(oi -> changedItemMap.put(oi, chmap.getValueAdded()));
             } else if(chmap.wasRemoved()) {
-                chmap.getValueRemoved().getDataList().forEach(oi -> changedItemMap.put(oi, chmap.getValueRemoved()));
+//                if(chmap.getValueRemoved() != chmap.getValueRemoved() && (chmap.getAddedSize() == 0 || chmap.getRemovedSize() == 0)) {
+                filter(chmap.getValueRemoved().getDataList(), ObsItem::isChanged).forEach(oi -> changedItemMap.put(oi, chmap.getValueRemoved()));
+                List<ObsItem> unchanged = filter(changedItemMap.keySet(), o -> !o.isChanged());
+                unchanged.forEach(changedItemMap::remove);
+//                }
+                
             }
+            obsCsvMap.values().forEach(ObsCsv::checkIfChanged);
+
+
         });
     }
 
@@ -115,7 +125,9 @@ class GuiModelImpl implements GuiModel {
         if(changedItemMap.isEmpty()) {
             return false;
         } else {
-            obsCsvMap.values().forEach(ObsCsv::rollback);
+            obsCsvMap.clear();
+            csvPaths.forEach(p -> obsCsvMap.put(p, dao.readCsvFile(p)));
+//            obsCsvMap.values().forEach(ObsCsv::rollback);
             changedItemMap.clear();
             return true;
         }
