@@ -96,6 +96,11 @@ class GuiModelImpl implements GuiModel {
     }
 
     @Override
+    public SimpleObjectProperty<ObsCsv> selectedPathProperty() {
+        return selectedPath;
+    }
+
+    @Override
     public void selectedTableItemOnChange(Consumer<ObsItem> onChange) {
         selectedTableItem.addListener((obs,o,n) -> onChange.accept(n));
     }

@@ -1,5 +1,6 @@
 package xxx.joker.apps.datareader.jfx.model;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableMap;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
@@ -16,6 +17,7 @@ public interface GuiModel {
 
     void selectedPathSet(Path path);
     void selectedPathOnChange(Consumer<ObsCsv> onChange);
+    SimpleObjectProperty<ObsCsv> selectedPathProperty();
     ObsCsv getSelectedPath();
 
     void selectedTableItemSet(ObsItem selectedTableItem);

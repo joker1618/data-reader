@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
 
@@ -76,7 +77,7 @@ public class PaneLeft extends VBox {
         btnCommit.setOnAction(e -> {guiModel.commit();flagBlack.set(!flagBlack.get());});
         btnRollback.setOnAction(e -> {guiModel.rollback();flagBlack.set(!flagBlack.get());});
 
-        Arrays.asList(btnCommit, btnRollback).forEach(btn -> btn.disableProperty().bind(Bindings.createBooleanBinding(
+        Arrays.asList(btnCommit, btnRollback).forEach(btn -> btn.disableProperty().bind(createBooleanBinding(
                 () -> guiModel.getChangedItemMap().isEmpty(),
                 guiModel.getChangedItemMap()
         )));
@@ -84,18 +85,19 @@ public class PaneLeft extends VBox {
         getChildren().add(boxButtons);
         getChildren().add(lvPaths);
 
-        // todo delete
-        Button btnTmp = new Button("__TMP__");
-        btnTmp.setOnAction(e -> doWork("from button tmp"));
-        getChildren().add(createHBox("temp", btnTmp));
-        // todo end to delete
+        Button btnOpenExplorer = new Button("explorer");
+        btnOpenExplorer.disableProperty().bind(createBooleanBinding(() -> guiModel.getSelectedPath() == null, guiModel.selectedPathProperty()));
+        btnOpenExplorer.setOnAction(e -> JkProcess.execute("explorer.exe {}", guiModel.getSelectedPath().getCsvPath().getParent()));
+        getChildren().add(createHBox("", btnOpenExplorer));
 
         AtomicReference<Pane> prevFilterPane = new AtomicReference<>();
         guiModel.selectedPathOnChange(obsCsv -> {
             getChildren().remove(prevFilterPane.get());
-            Pane filterPane = createFilterPane(obsCsv);
-            prevFilterPane.set(filterPane);
-            getChildren().add(filterPane);
+            if(obsCsv != null) {
+                Pane filterPane = createFilterPane(obsCsv);
+                prevFilterPane.set(filterPane);
+                getChildren().add(filterPane);
+            }
         });
     }
 
@@ -116,12 +118,5 @@ public class PaneLeft extends VBox {
         return createVBox("filters", gpBuilder.createGridPane(), boxButtons);
     }
 
-
-    // todo delete
-    public void doWork(String logString) {
-        LOG.debug(logString);
-        String folderName = guiModel.getSelectedPath() == null ? "" : guiModel.getSelectedPath().getCsvPath().getParent().toString();
-        JkProcess.execute("explorer.exe {}", folderName);
-    }
 
 }
