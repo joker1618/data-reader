@@ -86,7 +86,7 @@ public class PaneLeft extends VBox {
         getChildren().add(lvPaths);
 
         Button btnOpenExplorer = new Button("explorer");
-        btnOpenExplorer.disableProperty().bind(createBooleanBinding(() -> guiModel.getSelectedPath() == null, guiModel.selectedPathProperty()));
+        btnOpenExplorer.disableProperty().bind(guiModel.selectedPathProperty().isNull());
         btnOpenExplorer.setOnAction(e -> JkProcess.execute("explorer.exe {}", guiModel.getSelectedPath().getCsvPath().getParent()));
         getChildren().add(createHBox("", btnOpenExplorer));
 
