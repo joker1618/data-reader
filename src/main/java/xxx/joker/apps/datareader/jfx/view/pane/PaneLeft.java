@@ -1,6 +1,5 @@
 package xxx.joker.apps.datareader.jfx.view.pane;
 
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,7 +11,6 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.datareader.jfx.model.GuiModel;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
@@ -25,8 +23,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
 import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
@@ -44,6 +42,7 @@ public class PaneLeft extends VBox {
     private FilterObj filterObj;
 
     private final ListView<Path> lvPaths = new ListView<>();
+    private BiConsumer<String, Boolean> consumerColumnVisible;
 
     @PostConstruct
     public void init() {
@@ -127,19 +126,26 @@ public class PaneLeft extends VBox {
             tf.disableProperty().bind(Bindings.createBooleanBinding(() -> !cbEnable.isSelected(), cbEnable.selectedProperty()));
             Button btnShowHide = new Button("H");
             btnShowHide.setOnAction(e -> {
-                btnShowHide.setText(btnShowHide.getText().equals("H") ? "S" : "H");
+                boolean isHide = btnShowHide.getText().equals("H");
+                btnShowHide.setText(isHide ? "S" : "H");
+                consumerColumnVisible.accept(fname, !isHide);
             });
 
             cbEnable.setSelected(true);
             gpBuilder.addNode(nrow, 0, cbEnable);
             gpBuilder.addLabel(nrow, 1, fname);
             gpBuilder.addNode(nrow, 2, tf);
+            gpBuilder.addNode(nrow, 3, btnShowHide);
 //            filterObj.bindValue(obsCsv.getHeader().get(nrow), tf.textProperty());
         }
         Button btnClear = new Button("CLEAR");
         btnClear.setOnAction(e -> filter(tflist, tf -> !tf.isDisable()).forEach(tf -> tf.setText("")));
         HBox boxButtons = createHBox("boxClear", btnClear);
         return createVBox("filters", gpBuilder.createGridPane(), boxButtons);
+    }
+
+    public void setConsumerColumnVisible(BiConsumer<String, Boolean> consumer) {
+        this.consumerColumnVisible = consumer;
     }
 
 

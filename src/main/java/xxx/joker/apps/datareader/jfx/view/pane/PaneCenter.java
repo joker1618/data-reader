@@ -46,7 +46,7 @@ public class PaneCenter extends BorderPane {
 
     private final Label lblFileName = new Label();
     private Pane dataPane;
-    private AtomicReference<JfxTable> dataTable;
+    private AtomicReference<JfxTable> dataTable = new AtomicReference<>();
     private final JkCache<Path, List<ObsItem>> cacheData = new JkCache<>();
 
 

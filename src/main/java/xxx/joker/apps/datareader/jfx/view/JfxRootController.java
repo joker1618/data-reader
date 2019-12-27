@@ -17,6 +17,7 @@ import xxx.joker.apps.datareader.jfx.view.util.DragResizer;
 import xxx.joker.libs.core.file.JkFiles;
 import xxx.joker.libs.core.javafx.JfxUtil;
 
+import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +53,10 @@ public class JfxRootController {
         DragResizer.makeResizable(paneLeft, Side.RIGHT);
     }
 
+    @PostConstruct
+    public void init() {
+        paneLeft.setConsumerColumnVisible(paneCenter::setColumnVisible);
+    }
 
     public void initApp(Collection<Path> paths) {
         guiModel.csvPathsSet(paths);
