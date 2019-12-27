@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static xxx.joker.libs.core.lambda.JkStreams.*;
+import static xxx.joker.libs.core.util.JkStrings.safeTrim;
 
 @Component
 public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
@@ -44,14 +45,11 @@ public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
         Map<String, ObsField> fmap = obsItem.getObsFieldMap();
         int numWrong = count(fieldMap.entrySet(), e -> {
             ObsField of = fmap.get(e.getKey());
-            String expected = e.getValue().get();
-            return StringUtils.isNotBlank(expected)
-                    && !StringUtils.containsIgnoreCase(JkStrings.safeTrim(of.getCurrentValue()), expected);
+            String expected = e.getValue().getValueSafe();
+            return StringUtils.isNotBlank(expected) && of != null   
+                    && !StringUtils.containsIgnoreCase(safeTrim(of.getCurrentValue()), expected);
         });
         return numWrong == 0;
     }
 
-    public void unbindValue(String fname) {
-        fieldMap.get(fname).unbind();
-    }
 }
