@@ -25,11 +25,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
 import static xxx.joker.libs.core.lambda.JkStreams.filter;
+import static xxx.joker.libs.core.util.JkStrings.strf;
 
 @Component
 public class PaneLeft extends VBox {
@@ -62,9 +64,13 @@ public class PaneLeft extends VBox {
                 if (item == null || empty) {
                     setText(null);
                 } else {
-                    setText(item.getFileName().toString());
                     ObsCsv obsCsv = guiModel.getObsCsvMap().get(item);
-                    obsCsv.changedProperty().addListener((obs,o,n) -> setTextFill(n ? Color.RED : Color.BLACK));
+                    Runnable runSetText = () -> setText(strf("{} ({})", item.getFileName().toString(), obsCsv.getDataList().size()));
+                    runSetText.run();
+                    obsCsv.changedProperty().addListener((obs,o,n) -> {
+                        setTextFill(n ? Color.RED : Color.BLACK);
+                        runSetText.run();
+                    });
                     flagBlack.addListener((obs,o,n) -> setTextFill(Color.BLACK));
                 }
             }

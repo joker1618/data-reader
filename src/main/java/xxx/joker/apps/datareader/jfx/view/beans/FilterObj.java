@@ -46,7 +46,7 @@ public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
         int numWrong = count(fieldMap.entrySet(), e -> {
             ObsField of = fmap.get(e.getKey());
             String expected = e.getValue().getValueSafe();
-            return StringUtils.isNotBlank(expected) && of != null   
+            return StringUtils.isNotBlank(expected) && of != null
                     && !StringUtils.containsIgnoreCase(safeTrim(of.getCurrentValue()), expected);
         });
         return numWrong == 0;
