@@ -18,7 +18,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import xxx.joker.apps.datareader.jfx.view.JfxRootController;
 import xxx.joker.libs.core.file.JkFiles;
+import xxx.joker.libs.core.javafx.JfxControls;
 import xxx.joker.libs.core.runtime.JkEnvironment;
+import xxx.joker.libs.core.util.JkConsole;
+import xxx.joker.libs.core.util.JkConvert;
 import xxx.joker.libs.core.util.JkStruct;
 
 import java.io.File;
@@ -88,7 +91,7 @@ public class MainApp extends Application {
 //        List<String> absPaths = map(JkFiles.findFiles(ftemp, false), Path::toString);
 //        params.addAll(absPaths);
 
-        List<Path> paths = new ArrayList<>(map(params, Paths::get));
+        List<Path> paths = new ArrayList<>(map(params, par -> Paths.get(JkConvert.unixToWinPath(par))));
 
         if(paths.isEmpty()) {
             FileChooser fc = new FileChooser();
