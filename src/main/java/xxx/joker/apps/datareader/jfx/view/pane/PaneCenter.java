@@ -22,10 +22,14 @@ import xxx.joker.apps.datareader.jfx.view.controls.JfxTable;
 import xxx.joker.apps.datareader.jfx.view.controls.JfxTableCol;
 import xxx.joker.libs.core.cache.JkCache;
 import xxx.joker.libs.core.javafx.JfxControls;
+import xxx.joker.libs.core.lambda.JkStreams;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
@@ -42,6 +46,7 @@ public class PaneCenter extends BorderPane {
 
     private final Label lblFileName = new Label();
     private Pane dataPane;
+    private AtomicReference<JfxTable> dataTable;
     private final JkCache<Path, List<ObsItem>> cacheData = new JkCache<>();
 
 
@@ -62,8 +67,10 @@ public class PaneCenter extends BorderPane {
         guiModel.selectedPathOnChange(n -> {
             lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "FILE:  " + n.getCsvPath().toString());
             dataPane.getChildren().clear();
+            dataTable.set(null);
             if(n != null) {
                 JfxTable<ObsItem> table = createTable(n);
+                dataTable.set(table);
                 dataPane.getChildren().setAll(table);
                 table.prefWidthProperty().bind(dataPane.widthProperty());
             }
@@ -124,4 +131,11 @@ public class PaneCenter extends BorderPane {
         return table;
     }
 
+    public void setColumnVisible(String header, boolean visible) {
+        if(dataTable.get() != null) {
+            ObservableList<TableColumn> columns = dataTable.get().getColumns();
+            List<TableColumn> res = columns.stream().filter(col -> header.equals(col.getText())).collect(Collectors.toList());
+            res.forEach(tc -> tc.setVisible(visible));
+        }
+    }
 }

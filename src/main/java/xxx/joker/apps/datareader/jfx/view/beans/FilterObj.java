@@ -1,6 +1,7 @@
 package xxx.joker.apps.datareader.jfx.view.beans;
 
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
 import xxx.joker.libs.core.util.JkStrings;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +31,8 @@ public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
         fieldMap.values().forEach(this::bind);
     }
 
-    public void bindValue(String fname, StringProperty textProp) {
-        fieldMap.get(fname).bind(textProp);
+    public void bindValue(String fname, StringBinding strBinding) {
+        fieldMap.get(fname).bind(strBinding);
     }
 
     @Override
@@ -47,5 +49,9 @@ public class FilterObj extends ObjectBinding<Predicate<ObsItem>> {
                     && !StringUtils.containsIgnoreCase(JkStrings.safeTrim(of.getCurrentValue()), expected);
         });
         return numWrong == 0;
+    }
+
+    public void unbindValue(String fname) {
+        fieldMap.get(fname).unbind();
     }
 }

@@ -1,6 +1,8 @@
 package xxx.joker.apps.datareader.jfx.view.pane;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -29,6 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
+import static xxx.joker.libs.core.lambda.JkStreams.filter;
 
 @Component
 public class PaneLeft extends VBox {
@@ -103,17 +106,38 @@ public class PaneLeft extends VBox {
 
     private Pane createFilterPane(ObsCsv obsCsv) {
         filterObj.reset(obsCsv.getHeader());
-        List<TextField>tflist = new ArrayList<>();
+        List<TextField> tflist = new ArrayList<>();
         GridPaneBuilder gpBuilder = new GridPaneBuilder();
         for (int nrow = 0; nrow < obsCsv.getHeader().size(); nrow++) {
-            gpBuilder.addLabel(nrow, 0, obsCsv.getHeader().get(nrow));
+            CheckBox cbEnable = new CheckBox();
             TextField tf = new TextField();
             tflist.add(tf);
-            gpBuilder.addNode(nrow, 1, tf);
-            filterObj.bindValue(obsCsv.getHeader().get(nrow), tf.textProperty());
+            String fname = obsCsv.getHeader().get(nrow);
+            StringBinding filterStrBinding = Bindings.createStringBinding(() -> tf.isDisable() ? "" : tf.getText(), tf.textProperty(), tf.disableProperty());
+            filterObj.bindValue(fname, filterStrBinding);
+//            cbEnable.selectedProperty().addListener((obs,o,n) -> {
+//                if(n) {
+//                    tf.setDisable(false);
+//                } else {
+//                    tf.setDisable(true);
+//                    filterObj.unbindValue(fname);
+//
+//                }
+//            });
+            tf.disableProperty().bind(Bindings.createBooleanBinding(() -> !cbEnable.isSelected(), cbEnable.selectedProperty()));
+            Button btnShowHide = new Button("H");
+            btnShowHide.setOnAction(e -> {
+                btnShowHide.setText(btnShowHide.getText().equals("H") ? "S" : "H");
+            });
+
+            cbEnable.setSelected(true);
+            gpBuilder.addNode(nrow, 0, cbEnable);
+            gpBuilder.addLabel(nrow, 1, fname);
+            gpBuilder.addNode(nrow, 2, tf);
+//            filterObj.bindValue(obsCsv.getHeader().get(nrow), tf.textProperty());
         }
         Button btnClear = new Button("CLEAR");
-        btnClear.setOnAction(e -> tflist.forEach(tf -> tf.setText("")));
+        btnClear.setOnAction(e -> filter(tflist, tf -> !tf.isDisable()).forEach(tf -> tf.setText("")));
         HBox boxButtons = createHBox("boxClear", btnClear);
         return createVBox("filters", gpBuilder.createGridPane(), boxButtons);
     }
