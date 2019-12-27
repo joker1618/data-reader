@@ -114,15 +114,6 @@ public class PaneLeft extends VBox {
             String fname = obsCsv.getHeader().get(nrow);
             StringBinding filterStrBinding = Bindings.createStringBinding(() -> tf.isDisable() ? "" : tf.getText(), tf.textProperty(), tf.disableProperty());
             filterObj.bindValue(fname, filterStrBinding);
-//            cbEnable.selectedProperty().addListener((obs,o,n) -> {
-//                if(n) {
-//                    tf.setDisable(false);
-//                } else {
-//                    tf.setDisable(true);
-//                    filterObj.unbindValue(fname);
-//
-//                }
-//            });
             tf.disableProperty().bind(Bindings.createBooleanBinding(() -> !cbEnable.isSelected(), cbEnable.selectedProperty()));
             Button btnShowHide = new Button("H");
             btnShowHide.setOnAction(e -> {
@@ -136,7 +127,6 @@ public class PaneLeft extends VBox {
             gpBuilder.addLabel(nrow, 1, fname);
             gpBuilder.addNode(nrow, 2, tf);
             gpBuilder.addNode(nrow, 3, btnShowHide);
-//            filterObj.bindValue(obsCsv.getHeader().get(nrow), tf.textProperty());
         }
         Button btnClear = new Button("CLEAR");
         btnClear.setOnAction(e -> filter(tflist, tf -> !tf.isDisable()).forEach(tf -> tf.setText("")));
