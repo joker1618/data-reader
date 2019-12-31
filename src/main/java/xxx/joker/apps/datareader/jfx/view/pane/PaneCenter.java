@@ -1,5 +1,7 @@
 package xxx.joker.apps.datareader.jfx.view.pane;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -29,10 +31,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
+import static xxx.joker.libs.core.util.JkStrings.strf;
 
 @Component
 public class PaneCenter extends BorderPane {
@@ -45,6 +49,7 @@ public class PaneCenter extends BorderPane {
     private FilterObj filterObj;
 
     private final Label lblFileName = new Label();
+    private final Label lblItemSize = new Label();
     private Pane dataPane;
     private AtomicReference<JfxTable> dataTable = new AtomicReference<>();
     private final JkCache<Path, List<ObsItem>> cacheData = new JkCache<>();
@@ -52,7 +57,7 @@ public class PaneCenter extends BorderPane {
 
     @PostConstruct
     public void init() {
-        Pane headerPane = createHBox("caption", lblFileName);
+        Pane headerPane = createHBox("caption", lblFileName, lblItemSize);
         setTop(headerPane);
 
         dataPane = createHBox("data-view");
@@ -68,6 +73,7 @@ public class PaneCenter extends BorderPane {
             lblFileName.setText(n == null || n.getCsvPath() == null ? "" : "FILE:  " + n.getCsvPath().toString());
             dataPane.getChildren().clear();
             dataTable.set(null);
+            lblItemSize.setText("");
             if(n != null) {
                 JfxTable<ObsItem> table = createTable(n);
                 dataTable.set(table);
@@ -120,6 +126,9 @@ public class PaneCenter extends BorderPane {
 
         FilteredList<ObsItem> filteredList = new FilteredList<>(items);
         filteredList.predicateProperty().bind(filterObj);
+        Consumer<FilteredList<ObsItem>> setterLblItemSize = list -> lblItemSize.setText(strf("({})", list.size()));
+        setterLblItemSize.accept(filteredList);
+        filteredList.addListener((InvalidationListener)l -> setterLblItemSize.accept(filteredList));
 
         SortedList<ObsItem> tableItems = new SortedList<>(filteredList);
         tableItems.comparatorProperty().bind(table.comparatorProperty());

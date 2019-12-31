@@ -55,6 +55,7 @@
 .rootCenter .caption,
 .rootRight .caption{
     -fx-padding: 0 0 15 0;
+    -fx-spacing: 20;
     -fx-font-weight: BOLD;
 }
 .rootCenter .jfxTable .btnDelete {
