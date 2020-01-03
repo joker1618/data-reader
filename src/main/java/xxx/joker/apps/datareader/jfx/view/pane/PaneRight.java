@@ -36,7 +36,6 @@ public class PaneRight extends VBox {
 
     @PostConstruct
     public void initGui() {
-        GridPaneBuilder gpBuilder = new GridPaneBuilder();
 
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
@@ -45,6 +44,7 @@ public class PaneRight extends VBox {
         HBox captionJSon = createHBox("caption", new Label("JSON"));
         TextArea textArea = new TextArea();
         guiModel.selectedTableItemOnChange(n -> {
+            GridPaneBuilder gpBuilder = new GridPaneBuilder();
             double wbefore = getWidth();
             getChildren().clear();
             getChildren().add(captionFields);
