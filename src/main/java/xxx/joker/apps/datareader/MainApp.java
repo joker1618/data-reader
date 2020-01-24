@@ -5,36 +5,25 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.scenicview.ScenicView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import xxx.joker.apps.datareader.jfx.view.JfxRootController;
-import xxx.joker.libs.core.file.JkFiles;
-import xxx.joker.libs.core.javafx.JfxControls;
 import xxx.joker.libs.core.runtime.JkEnvironment;
-import xxx.joker.libs.core.util.JkConsole;
 import xxx.joker.libs.core.util.JkConvert;
-import xxx.joker.libs.core.util.JkStruct;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import static xxx.joker.libs.core.lambda.JkStreams.map;
-import static xxx.joker.libs.core.util.JkConsole.displayColl;
-import static xxx.joker.libs.core.util.JkStrings.strf;
-import static xxx.joker.libs.core.util.JkStruct.safeSublist;
 
 
 @SpringBootApplication
@@ -83,13 +72,6 @@ public class MainApp extends Application {
 
         boolean scenicView = !params.isEmpty() && params.get(0).equals("-sv");
         if(scenicView)  params.remove(0);
-
-        // todo remove
-//        Path ftemp = Paths.get("C:\\Users\\fede\\.appsFolder\\video-manager-v3\\repo\\db4datareader");
-//        Path ftemp = Paths.get("C:\\Users\\fede\\IdeaProjects\\APP\\data-reader\\src\\test\\resources\\dbsimple");
-//        Path ftemp = Paths.get("C:\\Users\\fede\\.appsFolder\\video-manager-v3\\repo\\db");
-//        List<String> absPaths = map(JkFiles.findFiles(ftemp, false), Path::toString);
-//        params.addAll(absPaths);
 
         List<Path> paths = new ArrayList<>(map(params, par -> Paths.get(JkConvert.unixToWinPath(par))));
 

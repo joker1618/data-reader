@@ -3,21 +3,17 @@ package xxx.joker.apps.datareader.jfx.view.beans;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
-import xxx.joker.libs.core.util.JkStrings;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import static xxx.joker.libs.core.lambda.JkStreams.*;
+import static xxx.joker.libs.core.lambda.JkStreams.count;
 import static xxx.joker.libs.core.util.JkStrings.safeTrim;
 
 @Component

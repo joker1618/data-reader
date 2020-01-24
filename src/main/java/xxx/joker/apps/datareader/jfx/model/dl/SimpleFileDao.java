@@ -1,10 +1,8 @@
 package xxx.joker.apps.datareader.jfx.model.dl;
 
 import javafx.collections.ObservableMap;
-import xxx.joker.apps.datareader.config.AppCtx;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.libs.core.file.JkFiles;
-import xxx.joker.libs.core.format.csv.JkCsv;
 import xxx.joker.libs.core.lambda.JkStreams;
 
 import java.nio.file.Path;
@@ -22,7 +20,7 @@ class SimpleFileDao implements FileDao {
 
     @Override
     public ObsCsv readCsvFile(Path path) {
-        return new ObsCsv(JkCsv.readFile(path));
+        return new ObsCsv(path);
     }
 
     @Override

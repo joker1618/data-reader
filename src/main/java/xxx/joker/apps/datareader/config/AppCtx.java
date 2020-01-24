@@ -1,9 +1,5 @@
 package xxx.joker.apps.datareader.config;
 
-import xxx.joker.libs.core.file.JkFiles;
-
-import java.nio.file.Path;
-
 public class AppCtx {
 
 //    private final Path folder;

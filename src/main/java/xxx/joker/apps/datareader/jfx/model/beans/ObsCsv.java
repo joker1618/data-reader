@@ -13,9 +13,6 @@ import xxx.joker.libs.core.lambda.JkStreams;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 import static xxx.joker.libs.core.lambda.JkStreams.count;
 import static xxx.joker.libs.core.lambda.JkStreams.map;
@@ -30,11 +27,13 @@ public class ObsCsv {
     private final SimpleBooleanProperty changedProperty = new SimpleBooleanProperty(false);
     private final SimpleBooleanProperty dataChanged = new SimpleBooleanProperty(false);
 
-    public ObsCsv(JkCsv csv) {
-        this.csvPath = csv.getCsvPath();
+    public ObsCsv(Path csvPath) {
+        this.csvPath = csvPath;
+
+        JkCsv csv = JkCsv.readFile(csvPath);
         this.header.addAll(csv.getHeader());
 
-        List<ObsItem> list = map(csv.getCurrentData(true), row -> new ObsItem(csv.getHeader(), map(row, ObsField::new)));
+        List<ObsItem> list = map(csv.getData(), row -> new ObsItem(csv.getHeader(), map(row.getCurrentData(), ObsField::new)));
         this.dataList.setAll(list);
         dataList.forEach(oi -> oi.addListener((obs,o,n) -> changedProperty.set(isChanged())));
         int origDataListSize = dataList.size();
@@ -67,7 +66,7 @@ public class ObsCsv {
 
     public String toStrCsv() {
         JkCsv csv = new JkCsv(header, map(dataList, ObsItem::strFields));
-        return JkStreams.joinLines(csv.strLines());
+        return JkStreams.joinLines(csv.toCsvLines());
     }
 
     public boolean isChanged() {

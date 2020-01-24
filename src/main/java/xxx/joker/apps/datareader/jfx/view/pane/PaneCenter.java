@@ -1,15 +1,12 @@
 package xxx.joker.apps.datareader.jfx.view.pane;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,23 +17,20 @@ import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsItem;
 import xxx.joker.apps.datareader.jfx.view.beans.FilterObj;
-import xxx.joker.apps.datareader.jfx.view.controls.JfxTable;
-import xxx.joker.apps.datareader.jfx.view.controls.JfxTableCol;
 import xxx.joker.libs.core.cache.JkCache;
-import xxx.joker.libs.core.javafx.JfxControls;
-import xxx.joker.libs.core.lambda.JkStreams;
+import xxx.joker.libs.javafx.tableview.JfxTable;
+import xxx.joker.libs.javafx.tableview.JfxTableCol;
+import xxx.joker.libs.javafx.util.JfxControls;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
-import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
 import static xxx.joker.libs.core.util.JkStrings.strf;
+import static xxx.joker.libs.javafx.util.JfxControls.createHBox;
 
 @Component
 public class PaneCenter extends BorderPane {

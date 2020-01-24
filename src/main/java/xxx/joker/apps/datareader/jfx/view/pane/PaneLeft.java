@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 import xxx.joker.apps.datareader.jfx.model.GuiModel;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsCsv;
 import xxx.joker.apps.datareader.jfx.view.beans.FilterObj;
-import xxx.joker.apps.datareader.jfx.view.controls.GridPaneBuilder;
 import xxx.joker.libs.core.adapter.JkProcess;
+import xxx.joker.libs.javafx.builder.JfxGridPaneBuilder;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
@@ -25,13 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static javafx.beans.binding.Bindings.createBooleanBinding;
-import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
-import static xxx.joker.libs.core.javafx.JfxControls.createVBox;
 import static xxx.joker.libs.core.lambda.JkStreams.filter;
 import static xxx.joker.libs.core.util.JkStrings.strf;
+import static xxx.joker.libs.javafx.util.JfxControls.createHBox;
+import static xxx.joker.libs.javafx.util.JfxControls.createVBox;
 
 @Component
 public class PaneLeft extends VBox {
@@ -112,7 +111,7 @@ public class PaneLeft extends VBox {
     private Pane createFilterPane(ObsCsv obsCsv) {
         filterObj.reset(obsCsv.getHeader());
         List<TextField> tflist = new ArrayList<>();
-        GridPaneBuilder gpBuilder = new GridPaneBuilder();
+        JfxGridPaneBuilder gpBuilder = new JfxGridPaneBuilder();
         for (int nrow = 0; nrow < obsCsv.getHeader().size(); nrow++) {
             CheckBox cbEnable = new CheckBox();
             TextField tf = new TextField();
@@ -129,10 +128,10 @@ public class PaneLeft extends VBox {
             });
 
             cbEnable.setSelected(true);
-            gpBuilder.addNode(nrow, 0, cbEnable);
-            gpBuilder.addLabel(nrow, 1, fname);
-            gpBuilder.addNode(nrow, 2, tf);
-            gpBuilder.addNode(nrow, 3, btnShowHide);
+            gpBuilder.add(nrow, 0, cbEnable);
+            gpBuilder.add(nrow, 1, fname);
+            gpBuilder.add(nrow, 2, tf);
+            gpBuilder.add(nrow, 3, btnShowHide);
         }
         Button btnClear = new Button("CLEAR");
         btnClear.setOnAction(e -> filter(tflist, tf -> !tf.isDisable()).forEach(tf -> tf.setText("")));

@@ -2,8 +2,6 @@ package xxx.joker.apps.datareader.jfx.view;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +12,11 @@ import xxx.joker.apps.datareader.jfx.view.pane.PaneCenter;
 import xxx.joker.apps.datareader.jfx.view.pane.PaneLeft;
 import xxx.joker.apps.datareader.jfx.view.pane.PaneRight;
 import xxx.joker.apps.datareader.jfx.view.util.DragResizer;
-import xxx.joker.libs.core.file.JkFiles;
-import xxx.joker.libs.core.javafx.JfxUtil;
+import xxx.joker.libs.javafx.util.JfxUtil;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class JfxRootController {

@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xxx.joker.apps.datareader.jfx.model.GuiModel;
 import xxx.joker.apps.datareader.jfx.model.beans.ObsField;
-import xxx.joker.apps.datareader.jfx.view.controls.GridPaneBuilder;
 import xxx.joker.libs.core.lambda.JkStreams;
 import xxx.joker.libs.core.util.JkStrings;
+import xxx.joker.libs.javafx.builder.JfxGridPaneBuilder;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-import static xxx.joker.libs.core.javafx.JfxControls.createHBox;
 import static xxx.joker.libs.core.util.JkStrings.safeTrim;
 import static xxx.joker.libs.core.util.JkStrings.strf;
+import static xxx.joker.libs.javafx.util.JfxControls.createHBox;
 
 @Component
 public class PaneRight extends VBox {
@@ -44,15 +44,15 @@ public class PaneRight extends VBox {
         HBox captionJSon = createHBox("caption", new Label("JSON"));
         TextArea textArea = new TextArea();
         guiModel.selectedTableItemOnChange(n -> {
-            GridPaneBuilder gpBuilder = new GridPaneBuilder();
+            JfxGridPaneBuilder gpBuilder = new JfxGridPaneBuilder();
             double wbefore = getWidth();
             getChildren().clear();
             getChildren().add(captionFields);
             if(n != null) {
                 List<String> jsonLines = new ArrayList<>();
                 for(int i = 0; i < n.getHeader().size(); i++) {
-                    gpBuilder.addLabel(i, 0, n.getHeader().get(i));
-                    gpBuilder.addNode(i, 1, createTextFieldVBox(n.getObsFields().get(i)));
+                    gpBuilder.add(i, 0, n.getHeader().get(i));
+                    gpBuilder.add(i, 1, createTextFieldVBox(n.getObsFields().get(i)));
                     jsonLines.add(strf("\"{}\": \"{}\"", n.getHeader().get(i), n.getObsFields().get(i).getCurrentValue()));
                 }
                 getChildren().add(gpBuilder.createGridPane());
