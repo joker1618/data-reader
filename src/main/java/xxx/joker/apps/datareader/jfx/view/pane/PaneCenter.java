@@ -87,8 +87,15 @@ public class PaneCenter extends BorderPane {
             table.addColumn(col);
         }
 
-        JfxTableCol<ObsItem, Boolean> col = JfxTableCol.createCol("*", ObsItem::getValue, b -> b ? "*" : "", "centered");
-        table.addColumn(0, col);
+        JfxTableCol<ObsItem, Boolean> colLineNum = JfxTableCol.createCol("*", ObsItem::getValue, b -> b ? "*" : "", "centered");
+        table.addColumn(0, colLineNum);
+        colLineNum.setCellFactory(param -> new TableCell<ObsItem, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : getIndex()+"");
+            }
+        });
 
         JfxTableCol<ObsItem, Boolean> colDel = JfxTableCol.createCol("", ObsItem::getValue, "centered");
         table.addColumn(0, colDel);

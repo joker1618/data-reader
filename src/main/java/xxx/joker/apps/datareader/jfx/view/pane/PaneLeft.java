@@ -3,7 +3,11 @@ package xxx.joker.apps.datareader.jfx.view.pane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,11 +27,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static xxx.joker.libs.core.lambda.JkStreams.filter;
+import static xxx.joker.libs.core.util.JkConvert.toList;
 import static xxx.joker.libs.core.util.JkStrings.strf;
 import static xxx.joker.libs.javafx.util.JfxControls.createHBox;
 import static xxx.joker.libs.javafx.util.JfxControls.createVBox;
@@ -89,7 +95,25 @@ public class PaneLeft extends VBox {
                 guiModel.getChangedItemMap()
         )));
 
-        getChildren().add(boxButtons);
+        Button btnExpand = new Button(">");
+        Button btnCollapse = new Button("<");
+        SimpleObjectProperty<List<Node>> childrenList = new SimpleObjectProperty<>();
+        VBox vboxExpand = createVBox("centered", btnExpand);
+        btnCollapse.setOnAction(e -> {
+            if(childrenList.get() == null)  childrenList.set(toList(getChildren()));
+            getStyleClass().add("pad0");
+            getChildren().setAll(vboxExpand);
+        });
+        btnExpand.setOnAction(e -> {
+            getStyleClass().remove("pad0");
+            getChildren().setAll(childrenList.get());
+        });
+
+        BorderPane bpButtons = new BorderPane();
+        bpButtons.setCenter(boxButtons);
+        bpButtons.setRight(createVBox("top-center", btnCollapse));
+
+        getChildren().add(bpButtons);
         getChildren().add(lvPaths);
 
         Button btnOpenExplorer = new Button("explorer");
